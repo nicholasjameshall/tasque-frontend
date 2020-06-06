@@ -1,11 +1,11 @@
-var express = require('express');
-let app = express();
+const express = require('express');
 
-app.use(express.static('./src/'));
+const app = express();
 
-app.get('/*', function(req, res) {
-  res.sendFile('app.component.html', {root: 'src/app/'}
+app.use(express.static('./dist/tasque-app'));
+
+app.get('/*', (req, res) =>
+    res.sendFile('index.html', { root: 'dist/tasque-app/' }),
 );
-});
 
 app.listen(process.env.PORT || 8080);
