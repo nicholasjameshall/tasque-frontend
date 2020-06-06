@@ -1,0 +1,17 @@
+<div style="width:420px">
+  <h1 mat-dialog-title>Add Resource</h1>
+    <mat-form-field style="width:100%">
+      <mat-label>Name</mat-label>
+      <input matInput [(ngModel)]="data.name">
+    </mat-form-field><br>
+
+    <mat-form-field style="width:100%">
+      <mat-label>Hyperlink</mat-label>
+      <input matInput [(ngModel)]="data.hyperlink">
+    </mat-form-field><br>
+
+  <div mat-dialog-actions>
+    <button mat-raised-button type="button" color="primary"
+      [mat-dialog-close]="data">Add</button>
+  </div>
+</div>

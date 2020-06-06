@@ -1,0 +1,43 @@
+<div class="container">
+
+  <div class="projects-container">
+
+    <div class="column" *ngFor="let project of projects | async">
+
+      <h1>{{project.name}}</h1>
+      <h3>{{project.tasks.length}} tasks remaining</h3>
+
+      <mat-card class="card"
+        *ngFor="let task of project.tasks"
+        [ngClass]="task.completed ? 'mat-elevation-z0 completed' : 'not-completed'">
+
+        <mat-card-header>
+          <mat-card-title class="small-title">{{ task.description }}</mat-card-title>
+          <mat-card-subtitle *ngIf="!task.completed">{{ task.startDateStr }}</mat-card-subtitle>
+          <mat-card-subtitle *ngIf="task.completed">{{ task.endDateStr }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-actions *ngIf="task.completed">
+          <button mat-button (click)="setTaskOpen(task)">REOPEN</button>
+        </mat-card-actions>
+
+        <mat-card-actions *ngIf="!task.completed">
+          <button mat-button style="color:#4caf50" (click)="setTaskCompleted(task)">DONE</button>
+          <a [href]="resource.hyperlink" target="_blank" mat-button *ngFor="let resource of task.resources">
+            {{ resource.name }}
+          </a>
+        </mat-card-actions>
+
+      </mat-card>
+
+      <mat-card class="card mat-elevation-z0 add-new-task" (click)=openDialog(project)>
+        <mat-card-header>
+          <div mat-card-avatar class="add-img"></div>
+          <mat-card-title class="small-title">Add task</mat-card-title>
+          <mat-card-subtitle>New task</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+
+    </div>
+  </div>
+</div>

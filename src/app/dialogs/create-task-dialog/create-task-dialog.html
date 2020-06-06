@@ -1,0 +1,39 @@
+<div style="width:420px">
+  <h1 mat-dialog-title>Create task for {{data.project.name}}</h1>
+
+  <div mat-dialog-content>
+    <mat-form-field style="width:100%">
+      <mat-label>Task</mat-label>
+      <input matInput [(ngModel)]="data.description">
+    </mat-form-field><br>
+
+    <label id="radio-group-label">Priority</label><br>
+    <mat-radio-group
+      aria-labelledby="radio-group-label"
+      [(ngModel)]="data.priority">
+      <mat-radio-button [value]=1>
+        P1
+      </mat-radio-button>
+      <mat-radio-button [value]=2>
+        P2
+      </mat-radio-button>
+      <mat-radio-button [value]=3>
+        P3
+      </mat-radio-button>
+    </mat-radio-group>
+
+    <mat-form-field style="width:100%">
+      <mat-label>Resource name</mat-label>
+      <input matInput [(ngModel)]="data.resourceName">
+    </mat-form-field><br>
+
+    <mat-form-field style="width:100%">
+      <mat-label>Resource link</mat-label>
+      <input matInput [(ngModel)]="data.resourceLink">
+    </mat-form-field><br>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button type="button" color="primary"
+      [mat-dialog-close]="data">Create</button>
+  </div>
+</div>

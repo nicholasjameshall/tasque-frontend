@@ -1,0 +1,116 @@
+<mat-toolbar color="primary" class="toolbar">
+  <span>{{ title }}</span>
+  <span class="spacer"></span>
+  <div class="icon-container" matTooltip="Log out" (click)='logout()'>
+    <mat-icon class="signout-icon">logout</mat-icon>
+  </div>
+  <mat-progress-bar class="progress-bar"
+    *ngIf="loading" mode="query"></mat-progress-bar>
+</mat-toolbar>
+
+<div class="container">
+  <div *ngIf="projects?.length > 0" class="projects-container">
+    <div class="column" *ngFor="let project of projects">
+      <div class="column-title-container"
+        style="background-image:url('assets/{{project.id}}.jpg')">
+        <div class="column-title-bg"></div>
+        <div class="column-title">
+          {{project.name}}
+        </div>
+      </div>
+
+      <mat-card class="card mat-elevation-z0 add-new-task"
+        (click)=openCreateTaskDialog(project)>
+        <mat-card-header>
+          <div mat-card-avatar class="add-img"></div>
+          <mat-card-title class="small-title">Add task</mat-card-title>
+          <mat-card-subtitle>New task</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+
+      <mat-card class="card"
+        *ngFor="let task of sortTasksByPriority(project.tasks); let i = index"
+        [ngClass]="task.status == 'completed' ?
+          'mat-elevation-z0 completed' : 'not-completed'">
+
+        <mat-card-header>
+          <div mat-card-avatar class="completed-icon"
+            *ngIf="task.status == 'completed'">
+            <mat-icon style="line-height:32px;">done</mat-icon>
+          </div>
+          <div mat-card-avatar class="taken-icon"
+            *ngIf="task.status == 'taken'">
+            <mat-icon style="line-height:32px;">today</mat-icon>
+          </div>
+          <div mat-card-avatar class="priority-icon"
+            *ngIf="task.status == 'new'"
+            (click)="changeTaskPriority(task)"
+            [ngClass]="{
+              'one': task.priority == 1,
+              'two': task.priority == 2,
+              'three': task.priority == 3
+            }">
+            {{ task.priority }}
+          </div>
+
+          <mat-card-title class="small-title"
+            (click)="openEditTaskDialog(task)">
+              {{ task.description }}
+          </mat-card-title>
+          <mat-card-subtitle *ngIf="!task.completed">
+            {{ task.startDateStr }}
+          </mat-card-subtitle>
+          <mat-card-subtitle *ngIf="task.completed">
+            {{ task.endDateStr }}
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-actions *ngIf="task.status =='completed'">
+          <button mat-button (click)="setTaskOpen(task)">REOPEN</button>
+        </mat-card-actions>
+
+        <mat-card-actions *ngIf="task.status != 'completed'">
+          <a [href]="resource.hyperlink" target="_blank"
+            mat-button *ngFor="let resource of task.resources">
+            {{ resource.name }}
+          </a>
+          <button mat-button style="color:#e1e1e1"
+            (click)="openCreateResourceDialog(task)">+</button>
+        </mat-card-actions>
+
+        <mat-card-actions *ngIf="task.status == 'taken'"
+          style="border-top:1px dashed #e1e1e1">
+          <button mat-button style="color:#4caf50"
+            (click)="setTaskCompleted(task)">
+            DONE
+          </button>
+          <button mat-button (click)="deleteTask(task, project, i)">
+            DELETE
+          </button>
+        </mat-card-actions>
+
+        <mat-card-actions *ngIf="task.status == 'new'"
+          style="border-top:1px dashed #e1e1e1">
+          <button mat-button
+            (click)="setTaskTaken(task)">
+            TAKE
+          </button>
+          <button mat-button (click)="deleteTask(task, project, i)">
+            DELETE
+          </button>
+        </mat-card-actions>
+
+      </mat-card>
+
+    </div>
+  </div>
+  <div *ngIf="projects?.length == 0" class="no-projects-message">
+    You haven't created any projects yet :(
+  </div>
+  <button matTooltip="Add Project"
+    style="position:fixed; bottom: 40px; right:40px"
+    mat-fab color="primary"
+    (click)="openCreateProjectDialog()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

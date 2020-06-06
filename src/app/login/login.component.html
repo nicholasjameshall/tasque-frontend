@@ -1,0 +1,33 @@
+<mat-toolbar color="primary" class="toolbar">
+  <span>{{ title }}</span>
+  <span class="spacer"></span>
+  <mat-progress-bar class="progress-bar"
+    *ngIf="loading" mode="query"></mat-progress-bar>
+</mat-toolbar>
+<div class="container">
+  <mat-card class="card">
+    <mat-card-header>
+      <mat-card-title>Welcome!</mat-card-title>
+      <mat-card-subtitle>Please log in to continue.</mat-card-subtitle>
+    </mat-card-header>
+
+    <form [formGroup]="loginForm">
+
+      <mat-form-field class="input">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username">
+      </mat-form-field>
+      <br>
+
+      <mat-form-field class="input">
+        <mat-label>Password</mat-label>
+        <input id="password" type="password"
+          matInput formControlName="password">
+      </mat-form-field>
+      <br>
+
+      <button mat-raised-button color="primary" (click)="login()">LOGIN</button>
+
+    </form>
+  </mat-card>
+</div>
