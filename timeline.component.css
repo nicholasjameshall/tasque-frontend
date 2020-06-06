@@ -1,0 +1,265 @@
+.toolbar {
+  z-index:2;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.icon-container {
+  border-radius: 80px;
+  height: 40px;
+  width: 40px;
+  text-align: center;
+  color:black;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  background-color: white;
+  margin-right:20px;
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+}
+
+.signout-icon {
+  line-height:40px;
+}
+
+
+.personal {
+  background-image: url('/assets/personal.png');
+}
+
+.work {
+  background-image: url('/assets/work.png');
+}
+
+mat-progress-bar, .progress-bar {
+  position: absolute;
+  top:0;
+  left:0;
+}
+
+
+.container {
+  width:100%;
+  display: flex;
+  flex-direction: row;
+  font-family: 'Open Sans', sans-serif;
+  margin-top:20px;
+}
+
+.create-projects-container {
+  flex: 1;
+  display:flex;
+}
+
+.projects-container {
+  flex: 5;
+  display:flex;
+}
+
+.create-task-form {
+  padding:20px;
+}
+
+.column {
+  flex: 1;
+  position: relative;
+  margin: 10px;
+  overflow: auto;
+}
+
+h1, h3 {
+  margin:20px;
+}
+
+.img {
+  max-width:40%;
+  height:auto;
+  margin:auto;
+  display: block;
+}
+
+
+.card {
+  margin: 5px;
+  margin-bottom: 15px;
+  transition: 2s;
+}
+
+.completed {
+  background-color: #f1f1f1;
+  box-shadow: 0;
+  border: 1px solid #e1e1e1;
+}
+
+.not-completed {
+  background-color: white;
+}
+
+.add-new-task {
+  background-color: #f1f1f1;
+  box-shadow: 0;
+  border: 1px solid #e1e1e1;
+  cursor: pointer;
+}
+
+.small-title {
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.large-title {
+  font-size:16px;
+}
+
+.french {
+  background-image: url('/assets/french.jpg');
+  background-size: cover;
+}
+
+.german {
+  background-image: url('/assets/switzerland.jpg');
+  background-size: cover;
+}
+
+.running {
+  background-image: url('/assets/running.png');
+  background-size: cover;
+}
+
+.completed-img {
+  background-image: url('/assets/tick.png');
+  background-size: cover;
+  border:0;
+}
+
+.app {
+  background-image: url('/assets/code.jpeg');
+}
+
+.usa {
+  background-image: url('/assets/usa.JPG');
+}
+
+.lose-weight {
+  background-image: url('/assets/squat.jpg');
+}
+
+.admin {
+  background-image: url('/assets/admin.jpeg');
+}
+
+.add-img {
+  height:14px;
+  width:14px;
+  background-image: url('/assets/add.png');
+  background-size: cover;
+  border:0;
+}
+
+.completed-icon {
+  height:32px;
+  width:32px;
+  background-color: #e1e1e1;
+  color:white;
+  text-align: center;
+  line-height:32px;
+}
+
+.taken-icon {
+  height:32px;
+  width:32px;
+  background-color: #2196F3;
+  color:white;
+  text-align: center;
+  line-height:32px;
+}
+
+.priority-icon {
+  height:32px;
+  width:32px;
+  color:white;
+  text-align: center;
+  line-height:32px;
+  cursor: pointer;
+}
+
+.arrow-up {
+  width:12px;
+  height:12px;
+  position:absolute;
+  top:8px;
+  right:8px;
+  background-image: url('/assets/up-arrow.png');
+  background-size: cover;
+  cursor: pointer;
+}
+
+.column-title-container {
+  position: relative;
+  height:120px;
+  width:120px;
+  border-radius:120px;
+  margin:auto;
+  background-size: cover;
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  margin-bottom: 15px;
+  background-color: black;
+}
+
+.column-title-bg {
+  position: absolute;
+  z-index: 1;
+  top:0;
+  left:0;
+  background-color: black;
+  opacity: 0.5;
+  height:120px;
+  width:120px;
+  border-radius:120px;
+  width:100%;
+}
+
+.column-title {
+  position: absolute;
+  display: flex;
+  /* flex-direction: column;*/
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  top:0;
+  left:0;
+  height:80px;
+  width:80px;
+  text-align: center;
+  line-height: 28px;
+  border-radius:80px;
+  font-size:22px;
+  padding: 20px;
+  color:white;
+}
+
+.one {
+  background-color:#f44336;
+}
+
+.two {
+  background-color:#333333;
+}
+
+.three {
+  background-color:#999999;
+}
+
+mat-radio-button {
+  margin:20px;
+}
+
+.no-projects-message {
+  text-align: center;
+  padding:40px;
+  font-size:32px;
+}
