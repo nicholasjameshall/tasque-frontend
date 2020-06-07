@@ -7,3 +7,9 @@
 .input {
   width:100%;
 }
+
+mat-progress-bar, .progress-bar {
+  position: absolute;
+  top:0;
+  left:0;
+}
