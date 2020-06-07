@@ -15,7 +15,7 @@ import { UrlBuilder } from './models/urlbuilder';
   providedIn: 'root'
 })
 export class TaskService {
-  DOMAIN = 'localhost:8000';
+  DOMAIN = 'tasque-backend.herokuapp.com';
   PROJECTS = 'projects';
   TASKS = 'tasks';
   RESOURCES = 'resources';

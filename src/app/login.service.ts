@@ -8,7 +8,7 @@ import { UrlBuilder } from './models/urlbuilder';
   providedIn: 'root'
 })
 export class LoginService {
-  DOMAIN = 'localhost:8000';
+  DOMAIN = 'tasque-backend.herokuapp.com';
   LOGIN = 'login';
   LOGOUT = 'logout';
 
