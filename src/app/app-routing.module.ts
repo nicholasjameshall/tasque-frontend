@@ -5,6 +5,7 @@ import { TimelineComponent } from './timeline/timeline.component';
 import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
+  { path : '', component: TimelineComponent },
   { path : 'login', component: LoginComponent },
   { path : 'timeline', component: TimelineComponent }
 ];

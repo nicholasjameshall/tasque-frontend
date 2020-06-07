@@ -13,7 +13,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  title = "Tasque";
+  title: string = "Tasque";
+  loading: boolean = false;
 
   constructor(
     private loginService: LoginService,
@@ -34,6 +35,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+    this.loading = true;
     let username = this.loginForm.get('username').value;
     let password = this.loginForm.get('password').value;
 
@@ -41,11 +43,12 @@ export class LoginComponent implements OnInit {
       return this.loginService.login(username, password)
         .subscribe(
           resp => {
-            console.log(resp);
+            this.loading = false;
             this.openSnackBar("Login successful", "CLOSE");
             this.redirectUser();
           },
           error => {
+            this.loading = false;
             console.log(error);
             this.openSnackBar("Login failed", "CLOSE");
           }
