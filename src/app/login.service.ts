@@ -9,8 +9,8 @@ import { CreateUserRequest } from './models/createuserrequest';
   providedIn: 'root'
 })
 export class LoginService {
-  DOMAIN = "localhost:8000"
-  //DOMAIN = 'tasque-backend.herokuapp.com';
+  //DOMAIN = "localhost:8000"
+  DOMAIN = 'tasque-backend.herokuapp.com';
   LOGIN = 'login';
   LOGOUT = 'logout';
   SIGNUP = 'signup';
