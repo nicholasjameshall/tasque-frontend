@@ -76,7 +76,7 @@ export class TimelineComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    let DOMAIN = "work";
+    let DOMAIN = "personal";
     this.displayProjects(DOMAIN);
   }
 
