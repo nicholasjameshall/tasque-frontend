@@ -3,14 +3,17 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { UrlBuilder } from './models/urlbuilder';
+import { CreateUserRequest } from './models/createuserrequest';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  DOMAIN = 'tasque-backend.herokuapp.com';
+  DOMAIN = "localhost:8000"
+  //DOMAIN = 'tasque-backend.herokuapp.com';
   LOGIN = 'login';
   LOGOUT = 'logout';
+  SIGNUP = 'signup';
 
   constructor(private http: HttpClient) { }
 
@@ -84,9 +87,32 @@ export class LoginService {
       url,
       options
     ).pipe(
-      map(json => {
-        return json;
-      })
+      map(json => json)
     );
   }
+
+  signup(createUserRequest: CreateUserRequest) {
+    let headers = new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('X-CSRFToken', this.getCookie("csrftoken"))
+
+    let options = {
+      'headers': headers
+    }
+
+    let url = new UrlBuilder()
+      .addDomain(this.DOMAIN)
+      .addPath(this.SIGNUP)
+      .build();
+
+    return this.http.post(
+      url,
+      createUserRequest,
+      options
+    ).pipe(
+      map(json => json)
+    );
+
+  }
+
 }

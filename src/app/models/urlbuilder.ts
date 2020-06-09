@@ -1,5 +1,5 @@
 export class UrlBuilder {
-  PROTOCOL: string = "https://";
+  PROTOCOL: string = "http://";
   domain: string = '';
   path: string = '';
   parameters: string = '';

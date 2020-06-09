@@ -1,7 +1,18 @@
-.card {
-  width: 240px;
+.container {
   margin: auto;
+  position: relative;
+  display: flex;
+  width:820px;
+}
+
+.column {
+  margin: 20px;
   margin-top: 40px;
+  flex: 1;
+}
+
+.card {
+  padding:20px;
 }
 
 .input {

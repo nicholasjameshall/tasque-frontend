@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TaskService } from '../task-service.service'
 import { LoginService } from '../login.service'
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -20,6 +20,8 @@ import { CreateTaskDialog } from
 import { CreateTaskRequest } from
   '../models/createtaskrequest';
 import { CreateResourceRequest } from '../models/createresourcerequest';
+import { mergeMap, map } from 'rxjs/operators';
+import { Resource } from '../models/resource';
 
 @Component({
   selector: 'app-timeline',
@@ -54,7 +56,8 @@ export class TimelineComponent implements OnInit {
     "PROJECT_CREATION_FAILURE": "Project could not be created.",
     "GET_PROJECTS_SUCCESS": "Successfully retrieved projects.",
     "GET_PROJECTS_FAILURE": "Failed to get projects.",
-    "LOGIN": "Please log in."
+    "LOGIN": "Please log in.",
+    "TOO_MANY_PROJECTS": "The maximum number of projects is 6."
     }
   ACTIONS = {
     "CLOSE": "CLOSE"
@@ -73,8 +76,8 @@ export class TimelineComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    let DOMAIN = "personal";
-    this.getProjects(DOMAIN);
+    let DOMAIN = "work";
+    this.displayProjects(DOMAIN);
   }
 
   logout(): void {
@@ -122,9 +125,7 @@ export class TimelineComponent implements OnInit {
     dialogConfig.data = {
       'project': project,
       'description': '',
-      'priority': '',
-      'resourceName': '',
-      'resourceLink': 'http://'
+      'priority': ''
     }
 
     const dialogRef = this.dialog.open(
@@ -139,8 +140,7 @@ export class TimelineComponent implements OnInit {
         result.priority
       )
 
-      this.createTask(createTaskRequest, project,
-        result.resourceName, result.resourceLink);
+      this.createTask(createTaskRequest, project);
     });
   }
 
@@ -201,7 +201,7 @@ export class TimelineComponent implements OnInit {
           result.name,
           result.hyperlink
         );
-        this._createResource(createResourceRequest, task);
+        this.createResource(createResourceRequest, task);
       }
     });
   }
@@ -229,27 +229,26 @@ export class TimelineComponent implements OnInit {
       );
   }
 
-  getProjects(domain: string): Observable<Array<Project>>{
+  displayProjects(domain: string): void{
     this.loading = true;
     let queryParams = [
       ['domain', domain]
     ]
-    this.taskService.getProjects(queryParams)
-      .subscribe(
-        projects => {
-          this.projects = projects;
-        },
-        error => {
-          if(error.status == this.HTTP_STATUS.UNAUTHORIZED) {
-            this.redirectUser();
-            this.openSnackBar(this.RESULTS.LOGIN, this.ACTIONS.CLOSE);
-          } else {
-            this.openSnackBar(
-              this.RESULTS.GET_PROJECTS_FAILURE,
-              this.ACTIONS.CLOSE
-            );
-          }
-        });
+    this.taskService.getProjects(queryParams).subscribe(
+      projects => {
+        this.projects = projects;
+      },
+      error => {
+        if(error.status == this.HTTP_STATUS.UNAUTHORIZED) {
+          this.redirectUser();
+          this.openSnackBar(this.RESULTS.LOGIN, this.ACTIONS.CLOSE);
+        } else {
+          this.openSnackBar(
+            this.RESULTS.GET_PROJECTS_FAILURE,
+            this.ACTIONS.CLOSE
+          );
+        }
+      });
     this.domain = domain;
     this.loading = false;
     return;
@@ -264,86 +263,67 @@ export class TimelineComponent implements OnInit {
       newPriority = task.priority - 1;
     }
 
-    return this.taskService.setTaskPriority(task.id, newPriority)
-      .subscribe(
-        result => {
-          task.priority = newPriority;
-          this.openSnackBar(
-            this.RESULTS.PRIORITY_UPDATE_SUCCESS,
-            this.ACTIONS.CLOSE
-          );
-          this.loading = false;
-          return new Task(result);
-        },
-        error => {
-          this.openSnackBar(
-            this.RESULTS.PRIORITY_UPDATE_FAILURE,
-            this.ACTIONS.CLOSE
-          );
-          this.loading = false;
-        }
-      );
+    return this.taskService.setTaskPriority(task.id, newPriority).subscribe(
+      result => {
+        task.priority = newPriority;
+        this.openSnackBar(
+          this.RESULTS.PRIORITY_UPDATE_SUCCESS,
+          this.ACTIONS.CLOSE
+        );
+        this.loading = false;
+        return new Task(result);
+      },
+      error => {
+        this.openSnackBar(
+          this.RESULTS.PRIORITY_UPDATE_FAILURE,
+          this.ACTIONS.CLOSE
+        );
+        this.loading = false;
+      }
+    );
   }
 
   createProject(name: string) {
     this.loading = true;
-    return this.taskService.createProject(name, this.domain)
-      .subscribe(
-        project => {
+    return this.taskService.createProject(name, this.domain).subscribe(
+      project => {
+        this.openSnackBar(
+          this.RESULTS.PROJECT_CREATION_SUCCESS + ": " + project.name,
+          this.ACTIONS.CLOSE
+        );
+        this.projects.push(new Project(project));
+        this.loading = false;
+      },
+      error => {
+        this.openSnackBar(
+          this.RESULTS.PROJECT_CREATION_FAILURE,
+          this.ACTIONS.CLOSE
+        );
+        this.loading = false;
+      }
+    )
+  }
+
+  createTask(createTaskRequest: CreateTaskRequest, project: Project) {
+    this.loading = true;
+    if(createTaskRequest.isValid) {
+      return this.taskService.createTask(createTaskRequest).subscribe(
+        task => {
           this.openSnackBar(
-            this.RESULTS.PROJECT_CREATION_SUCCESS + ": " + project.name,
+            this.RESULTS.TASK_CREATION_SUCCESS + ": " + task.description,
             this.ACTIONS.CLOSE
           );
-          this.projects.push(new Project(project));
+          project.tasks.unshift(task);
           this.loading = false;
         },
         error => {
           this.openSnackBar(
-            this.RESULTS.PROJECT_CREATION_FAILURE,
+            this.RESULTS.TASK_CREATION_FAILURE + ": " + error.error.detail,
             this.ACTIONS.CLOSE
           );
           this.loading = false;
         }
       )
-  }
-
-  createTask(
-    createTaskRequest: CreateTaskRequest,
-    project: Project,
-    resourceName: string,
-    resourceLink: string
-  ) {
-    this.loading = true;
-    if(createTaskRequest.isValid) {
-      return this.taskService.createTask(createTaskRequest)
-        .subscribe(
-          task => {
-            if(typeof resourceName != 'undefined'
-              && typeof resourceLink != 'undefined') {
-
-              let createResourceRequest = new CreateResourceRequest(
-                task.id,
-                resourceName,
-                resourceLink
-              )
-
-              this._createResource(createResourceRequest, task);
-            }
-            this.openSnackBar(
-              this.RESULTS.TASK_CREATION_SUCCESS + ": " + task.description,
-              this.ACTIONS.CLOSE
-            );
-            project.tasks.unshift(task);
-            this.loading = false;
-          },
-          error => {
-            this.openSnackBar(
-              this.RESULTS.TASK_CREATION_FAILURE + ": " + error.error.detail,
-              this.ACTIONS.CLOSE
-            );
-            this.loading = false;
-          }
-        )
     }
   }
 
@@ -370,7 +350,7 @@ export class TimelineComponent implements OnInit {
       )
   }
 
-  _createResource(createResourceRequest: CreateResourceRequest, task: Task) {
+  createResource(createResourceRequest: CreateResourceRequest, task: Task) {
     if(createResourceRequest.isValid) {
       return this.taskService.createResource(createResourceRequest)
         .subscribe(
@@ -407,9 +387,9 @@ export class TimelineComponent implements OnInit {
         });
   }
 
-  setTaskTaken(task: Task) {
+  setTaskTaken(task: Task): Subscription {
     this.loading = true;
-    this.taskService.setTaskTaken(task.id)
+    return this.taskService.setTaskTaken(task.id)
       .subscribe(
         result => {
           task.status = result.status;
@@ -419,6 +399,7 @@ export class TimelineComponent implements OnInit {
             this.ACTIONS.CLOSE
           );
           this.loading = false;
+          return result;
         },
         error => {
           this.openSnackBar(
@@ -426,12 +407,13 @@ export class TimelineComponent implements OnInit {
             this.ACTIONS.CLOSE
           );
           this.loading = false;
+          return error;
         });
   }
 
-  setTaskOpen(task: Task) {
+  setTaskOpen(task: Task): Subscription {
     this.loading = true;
-    this.taskService.setTaskOpen(task.id)
+    return this.taskService.setTaskOpen(task.id)
     .subscribe(
       result => {
         task.status = result.status;
@@ -441,6 +423,7 @@ export class TimelineComponent implements OnInit {
           this.ACTIONS.CLOSE
         );
         this.loading = false;
+        return result;
       },
       error => {
         this.openSnackBar(
@@ -448,6 +431,7 @@ export class TimelineComponent implements OnInit {
           this.ACTIONS.CLOSE
         );
         this.loading = false;
+        return error;
       });
   }
 }

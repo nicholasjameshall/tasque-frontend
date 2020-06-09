@@ -6,8 +6,6 @@ export interface CreateTaskDialogData {
   project: Project;
   description: string;
   priority: number;
-  resourceName: string;
-  resourceLink: string;
 }
 
 @Component({
