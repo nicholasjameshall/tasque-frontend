@@ -25,6 +25,7 @@ import { CreateTaskDialog } from './dialogs/create-task-dialog/create-task-dialo
 import { EditTaskDialog } from './dialogs/edit-task-dialog/edit-task-dialog.component';
 import { CreateResourceDialog } from './dialogs/create-resource-dialog/create-resource-dialog.component';
 import { CreateProjectDialog } from './dialogs/create-project-dialog/create-project-dialog.component';
+import { SignupComponent } from './signup/signup.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { CreateProjectDialog } from './dialogs/create-project-dialog/create-proj
     CreateTaskDialog,
     EditTaskDialog,
     CreateResourceDialog,
-    CreateProjectDialog
+    CreateProjectDialog,
+    SignupComponent
   ],
   entryComponents: [
     CreateTaskDialog,

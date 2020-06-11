@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   signupForm: FormGroup;
   title: string = "Tasque";
   loading: boolean = false;
+  submitted: boolean = false;
 
   constructor(
     private loginService: LoginService,
@@ -75,6 +76,7 @@ export class LoginComponent implements OnInit {
     let password = this.loginForm.get('password').value;
 
     if(this.loginForm.valid) {
+      this.submitted = true;
       this.loading = true;
       return this.loginService.login(username, password)
         .subscribe(
@@ -87,32 +89,9 @@ export class LoginComponent implements OnInit {
             this.loading = false;
             console.log(error);
             this.openSnackBar("Login failed", "CLOSE");
+            this.submitted = false;
           }
         );
-    }
-  }
-
-  signup() {
-    if(this.signupForm.valid) {
-      this.loading = true;
-      let createUserRequest = new CreateUserRequest(
-        this.signupForm.get('username').value,
-        this.signupForm.get('password').value,
-        this.signupForm.get('email').value
-      )
-
-      this.loginService.signup(createUserRequest)
-        .subscribe(
-          result => {
-            this.loading = false;
-            this.openSnackBar("Successfully signed up! Please log in.", "CLOSE");
-          },
-          error => {
-            this.loading = false;
-            console.log(error);
-            this.openSnackBar("Sign-up failed. Please try again.", "CLOSE");
-          }
-        )
     }
   }
 

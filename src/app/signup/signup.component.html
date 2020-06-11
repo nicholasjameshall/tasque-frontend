@@ -1,0 +1,70 @@
+<mat-toolbar color="primary" class="toolbar">
+  <span>{{ title }}</span>
+  <span class="spacer"></span>
+  <mat-progress-bar class="progress-bar"
+    *ngIf="loading" mode="query"></mat-progress-bar>
+</mat-toolbar>
+<div class="container">
+  <div class="column">
+
+    <mat-card class="card">
+      <mat-card-header>
+        <mat-card-title>New around here?</mat-card-title>
+        <mat-card-subtitle>Sign up to use Tasquee!</mat-card-subtitle>
+      </mat-card-header>
+
+      <form [formGroup]="signupForm" (ngSubmit)="signup()">
+
+        <mat-form-field appearance="outline" class="input">
+          <mat-label>Username</mat-label>
+          <input matInput maxlength="30" formControlName="username">
+          <mat-error *ngIf="signupForm.get('username').invalid">
+            Username must be at least six characters long.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="input">
+          <mat-label>Email Address</mat-label>
+          <input matInput maxlength="30" formControlName="email">
+          <mat-error *ngIf="signupForm.get('email').invalid">
+            Please enter a valid email.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="outline"
+          class="input">
+          <mat-label>Password</mat-label>
+          <input id="password" type="password"
+            matInput maxlength="20" formControlName="password">
+          <mat-error *ngIf="signupForm.get('password').invalid">
+            Password must be at least eight characters long.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="input">
+          <mat-label>Repeat Password</mat-label>
+          <input id="repeatPassword" type="password"
+            matInput maxlength="20" formControlName="repeatPassword">
+          <mat-error *ngIf="signupForm.get('repeatPassword').invalid">
+            Please enter a valid password.
+          </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button
+          color="primary"
+          [disabled]="submitted"
+          (click)="signup()">SIGN UP</button>
+        <button mat-button
+          style="float:right"
+          routerLink="/login"
+          color="primary"
+          [disabled]="submitted">LOG IN</button>
+
+        <mat-error *ngIf="signupForm.hasError('nomatch')">
+          Your passwords do not match. Please try again.
+        </mat-error>
+      </form>
+    </mat-card>
+  </div>
+</div>
