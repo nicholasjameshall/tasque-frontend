@@ -36,11 +36,15 @@
 }
 
 mat-progress-bar, .progress-bar {
-  position: absolute;
+  position: fixed;
   top:0;
   left:0;
 }
 
+.action-button {
+  padding:2px;
+  margin:0;
+}
 
 .container {
   width:100%;
@@ -50,14 +54,9 @@ mat-progress-bar, .progress-bar {
   margin-top:20px;
 }
 
-.create-projects-container {
-  flex: 1;
-  display:flex;
-}
-
 .projects-container {
-  flex: 5;
   display:flex;
+  flex: 1;
 }
 
 .create-task-form {
@@ -65,7 +64,8 @@ mat-progress-bar, .progress-bar {
 }
 
 .column {
-  flex: 1;
+  flex:1;
+  float:left;
   position: relative;
   margin: 10px;
   overflow: auto;
@@ -178,6 +178,15 @@ h1, h3 {
   line-height:32px;
 }
 
+.hold-icon {
+  height:32px;
+  width:32px;
+  background-color: #e1e1e1;
+  color:white;
+  text-align: center;
+  line-height:32px;
+}
+
 .priority-icon {
   height:32px;
   width:32px;
@@ -200,14 +209,15 @@ h1, h3 {
 
 .column-title-container {
   position: relative;
-  height:120px;
-  width:120px;
-  border-radius:120px;
+  height:40px;
+  width:100%;
   margin:auto;
+  text-align: center;
   background-size: cover;
-  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
   margin-bottom: 15px;
-  background-color: black;
+  color: #333333;
+  line-height: 40px;
+  font-size: 14px;
 }
 
 .column-title-bg {

@@ -1,27 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { TaskService } from '../task-service.service'
-import { LoginService } from '../login.service'
-import { Observable, Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { Subscription } from 'rxjs';
+
+import { TaskService } from '../task-service.service'
+import { LoginService } from '../login.service'
+
+import { CreateResourceRequest } from '../models/createresourcerequest';
 import { Project } from '../models/project';
 import { Task } from '../models/task';
-import { Router } from '@angular/router';
+
 import { CreateProjectDialog } from
   '../dialogs/create-project-dialog/create-project-dialog.component';
 import { CreateResourceDialog } from
   '../dialogs/create-resource-dialog/create-resource-dialog.component';
 import { EditTaskDialog } from
   '../dialogs/edit-task-dialog/edit-task-dialog.component';
-
 import { CreateTaskDialog } from
   '../dialogs/create-task-dialog/create-task-dialog.component';
 import { CreateTaskRequest } from
   '../models/createtaskrequest';
-import { CreateResourceRequest } from '../models/createresourcerequest';
-import { mergeMap, map } from 'rxjs/operators';
-import { Resource } from '../models/resource';
 
 @Component({
   selector: 'app-timeline',
@@ -46,6 +46,10 @@ export class TimelineComponent implements OnInit {
     "TASK_TAKEN_FAILURE": "Task could not be taken.",
     "TASK_COMPLETED_SUCCESS": "Task set as completed.",
     "TASK_COMPLETED_FAILURE": "Task could not be set as completed.",
+    "TASK_ON_HOLD_SUCCESS": "Task paused",
+    "TASK_ON_HOLD_FAILURE": "Task could not be paused",
+    "TASK_NEW_SUCCESS": "Task resumed",
+    "TASK_NEW_FAILURE": "Task could not be resumed",
     "RESOURCE_CREATION_SUCCESS": "Resource successfully created",
     "RESOURCE_CREATION_FAILURE": "Resource could not be created.",
     "TASK_DELETION_SUCCESS": "Task successfully deleted.",
@@ -88,6 +92,9 @@ export class TimelineComponent implements OnInit {
           this.redirectUser();
         },
         error => {
+          if(error.status == this.HTTP_STATUS.UNAUTHORIZED) {
+            this.redirectUser();
+          }
           this.openSnackBar(this.RESULTS.LOGOUT_FAILURE, this.ACTIONS.CLOSE);
         }
       )
@@ -100,13 +107,20 @@ export class TimelineComponent implements OnInit {
   sortTasksByPriority(tasks: Task[]): Task[] {
     const TASK_TAKEN = "taken";
     const TASK_NEW = "new";
+    const TASK_ON_HOLD = "on_hold";
 
     return tasks.sort((a: Task, b: Task) => {
       if(a.status == TASK_TAKEN && b.status == TASK_TAKEN) {
         return a.startDate < b.startDate ? 1 : -1;
       } else if(a.status == TASK_NEW && b.status == TASK_NEW) {
         return a.startDate < b.startDate ? 1 : -1;
+      } else if(a.status == TASK_ON_HOLD && b.status == TASK_ON_HOLD) {
+        return a.startDate < b.startDate ? 1 : -1;
       } else if(a.status == TASK_TAKEN && b.status == TASK_NEW) {
+        return -1;
+      } else if(a.status == TASK_TAKEN && b.status == TASK_ON_HOLD) {
+        return -1;
+      } else if(a.status == TASK_NEW && b.status == TASK_ON_HOLD) {
         return -1;
       } else if(!a.completed && b.completed) {
         return -1;
@@ -237,8 +251,10 @@ export class TimelineComponent implements OnInit {
     this.taskService.getProjects(queryParams).subscribe(
       projects => {
         this.projects = projects;
+        this.loading = false;
       },
       error => {
+        this.loading = false;
         if(error.status == this.HTTP_STATUS.UNAUTHORIZED) {
           this.redirectUser();
           this.openSnackBar(this.RESULTS.LOGIN, this.ACTIONS.CLOSE);
@@ -250,7 +266,6 @@ export class TimelineComponent implements OnInit {
         }
       });
     this.domain = domain;
-    this.loading = false;
     return;
   }
 
@@ -305,8 +320,9 @@ export class TimelineComponent implements OnInit {
   }
 
   createTask(createTaskRequest: CreateTaskRequest, project: Project) {
-    this.loading = true;
     if(createTaskRequest.isValid) {
+      console.log('ok');
+      this.loading = true;
       return this.taskService.createTask(createTaskRequest).subscribe(
         task => {
           this.openSnackBar(
@@ -381,6 +397,48 @@ export class TimelineComponent implements OnInit {
         error => {
           this.openSnackBar(
             this.RESULTS.TASK_COMPLETED_FAILURE,
+            this.ACTIONS.CLOSE
+          );
+          this.loading = false;
+        });
+  }
+
+  setTaskOnHold(task: Task) {
+    this.loading = true;
+    this.taskService.setTaskOnHold(task.id)
+      .subscribe(
+        result => {
+          task.status = result.status;
+          this.openSnackBar(
+            this.RESULTS.TASK_ON_HOLD_SUCCESS,
+            this.ACTIONS.CLOSE
+          );
+          this.loading = false;
+        },
+        error => {
+          this.openSnackBar(
+            this.RESULTS.TASK_ON_HOLD_FAILURE,
+            this.ACTIONS.CLOSE
+          );
+          this.loading = false;
+        });
+  }
+
+  setTaskNew(task: Task) {
+    this.loading = true;
+    this.taskService.setTaskNew(task.id)
+      .subscribe(
+        result => {
+          task.status = result.status;
+          this.openSnackBar(
+            this.RESULTS.TASK_NEW_SUCCESS,
+            this.ACTIONS.CLOSE
+          );
+          this.loading = false;
+        },
+        error => {
+          this.openSnackBar(
+            this.RESULTS.TASK_NEW_FAILURE,
             this.ACTIONS.CLOSE
           );
           this.loading = false;

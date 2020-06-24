@@ -53,11 +53,11 @@ export class TaskService {
   }
 
   getProjects(queryParams: any[]): Observable<Project[]> {
-    let ub = new UrlBuilder();
-    ub.addDomain(this.DOMAIN);
-    ub.addPath(this.PROJECTS);
-    ub.addParameters(queryParams);
-    let url = ub.build();
+    let url = new UrlBuilder()
+      .addDomain(this.DOMAIN)
+      .addPath(this.PROJECTS)
+      .addParameters(queryParams)
+      .build();
 
     return this._get(url).pipe(
       map((projects: any[]) => projects
@@ -77,11 +77,11 @@ export class TaskService {
   }
 
   deleteTask(task: Task): Observable<any> {
-    let ub = new UrlBuilder();
-    ub.addDomain(this.DOMAIN);
-    ub.addPath(this.TASKS);
-    ub.addPath(task.id.toString());
-    let url = ub.build();
+    let url = new UrlBuilder()
+      .addDomain(this.DOMAIN)
+      .addPath(this.TASKS)
+      .addPath(task.id.toString())
+      .build();
     return this._delete(url);
   }
 
@@ -94,10 +94,10 @@ export class TaskService {
   }
 
   createProject(name: string, domain: string): Observable<Project> {
-    let ub = new UrlBuilder();
-    ub.addDomain(this.DOMAIN);
-    ub.addPath(this.PROJECTS);
-    let url = ub.build();
+    let url = new UrlBuilder()
+      .addDomain(this.DOMAIN)
+      .addPath(this.PROJECTS)
+      .build();
     let createProjectRequest = new CreateProjectRequest(
       name,
       domain
@@ -109,10 +109,10 @@ export class TaskService {
   }
 
   createTask(createTaskRequest: CreateTaskRequest): Observable<Task> {
-    let ub = new UrlBuilder();
-    ub.addDomain(this.DOMAIN);
-    ub.addPath(this.TASKS);
-    let url = ub.build();
+    let url = new UrlBuilder()
+      .addDomain(this.DOMAIN)
+      .addPath(this.TASKS)
+      .build();
 
     return this._post(url, createTaskRequest).pipe(
       map(json => new Task(json))
@@ -121,10 +121,10 @@ export class TaskService {
 
   createResource(createResourceRequest: CreateResourceRequest):
     Observable<Resource> {
-      let ub = new UrlBuilder();
-      ub.addDomain(this.DOMAIN);
-      ub.addPath(this.RESOURCES);
-      let url = ub.build();
+      let url = new UrlBuilder()
+        .addDomain(this.DOMAIN)
+        .addPath(this.RESOURCES)
+        .build();
 
     return this._post(url, createResourceRequest).pipe(
       map(json => new Resource(json))
@@ -143,11 +143,11 @@ export class TaskService {
 
   setTaskTaken(taskId: number): Observable<Task> {
     const TASK_TAKEN = "taken";
-    let ub = new UrlBuilder();
-    ub.addDomain(this.DOMAIN);
-    ub.addPath(this.TASKS);
-    ub.addPath(taskId.toString());
-    let url = ub.build();
+    let url = new UrlBuilder()
+      .addDomain(this.DOMAIN)
+      .addPath(this.TASKS)
+      .addPath(taskId.toString())
+      .build();
 
     let patch = {
       'status': TASK_TAKEN
@@ -160,11 +160,11 @@ export class TaskService {
 
   setTaskCompleted(taskId: number): Observable<Task> {
     const TASK_COMPLETED = "completed";
-    let ub = new UrlBuilder();
-    ub.addDomain(this.DOMAIN);
-    ub.addPath(this.TASKS);
-    ub.addPath(taskId.toString());
-    let url = ub.build();
+    let url = new UrlBuilder()
+      .addDomain(this.DOMAIN)
+      .addPath(this.TASKS)
+      .addPath(taskId.toString())
+      .build();
     let taskEndedDate = new Date();
     let patch = {
       'status': TASK_COMPLETED,
@@ -176,12 +176,44 @@ export class TaskService {
     );
   }
 
+  setTaskOnHold(taskId: number): Observable<Task> {
+    const TASK_ON_HOLD = "on_hold";
+    let url = new UrlBuilder()
+      .addDomain(this.DOMAIN)
+      .addPath(this.TASKS)
+      .addPath(taskId.toString())
+      .build();
+    let patch = {
+      'status': TASK_ON_HOLD
+    }
+
+    return this._patch(url, patch).pipe(
+      map(json => new Task(json))
+    );
+  }
+
+  setTaskNew(taskId: number): Observable<Task> {
+    const TASK_NEW = "new";
+    let url = new UrlBuilder()
+      .addDomain(this.DOMAIN)
+      .addPath(this.TASKS)
+      .addPath(taskId.toString())
+      .build();
+    let patch = {
+      'status': TASK_NEW
+    }
+
+    return this._patch(url, patch).pipe(
+      map(json => new Task(json))
+    );
+  }
+
   setTaskPriority(taskId: number, priority: number): Observable<Task> {
-    let ub = new UrlBuilder();
-    ub.addDomain(this.DOMAIN);
-    ub.addPath(this.TASKS);
-    ub.addPath(taskId.toString());
-    let url = ub.build();
+    let url = new UrlBuilder()
+      .addDomain(this.DOMAIN)
+      .addPath(this.TASKS)
+      .addPath(taskId.toString())
+      .build();
     let patch = {
       'priority': priority
     }
@@ -192,11 +224,11 @@ export class TaskService {
   }
 
   setTaskDescription(taskId: number, description: string): Observable<Task> {
-    let ub = new UrlBuilder();
-    ub.addDomain(this.DOMAIN);
-    ub.addPath(this.TASKS);
-    ub.addPath(taskId.toString());
-    let url = ub.build();
+    let url = new UrlBuilder()
+      .addDomain(this.DOMAIN)
+      .addPath(this.TASKS)
+      .addPath(taskId.toString())
+      .build();
     let patch = {
       'description': description
     }
@@ -208,11 +240,11 @@ export class TaskService {
 
   setTaskOpen(taskId: number): Observable<Task> {
     const TASK_OPEN = "new";
-    let ub = new UrlBuilder();
-    ub.addDomain(this.DOMAIN);
-    ub.addPath(this.TASKS);
-    ub.addPath(taskId.toString());
-    let url = ub.build();
+    let url = new UrlBuilder()
+      .addDomain(this.DOMAIN)
+      .addPath(this.TASKS)
+      .addPath(taskId.toString())
+      .build();
     let patch = {
       'status': TASK_OPEN
     }

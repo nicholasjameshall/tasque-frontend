@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 import { UrlBuilder } from './models/urlbuilder';
 import { CreateUserRequest } from './models/createuserrequest';
 

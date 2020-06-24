@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { LoginService } from '../login.service';
+
 import { CreateUserRequest } from '../models/createuserrequest';
+
+import { LoginService } from '../login.service';
 
 @Component({
   selector: 'app-signup',
@@ -15,6 +17,7 @@ export class SignupComponent implements OnInit {
   loading: boolean;
   submitted: boolean;
   title: string = "Tasque";
+  success: boolean = false;
 
   constructor(
     private loginService: LoginService,
@@ -75,7 +78,9 @@ export class SignupComponent implements OnInit {
         .subscribe(
           result => {
             this.loading = false;
-            this.openSnackBar("Successfully signed up! Please log in.", "CLOSE");
+            this.success = true;
+            this.openSnackBar(
+              "Successfully signed up! Please log in.", "CLOSE");
             this.redirectUser('/login');
           },
           error => {
@@ -88,7 +93,7 @@ export class SignupComponent implements OnInit {
     }
   }
 
-  redirectUser(routerLink) {
+  redirectUser(routerLink: string) {
     this.router.navigate([routerLink]);
   }
 

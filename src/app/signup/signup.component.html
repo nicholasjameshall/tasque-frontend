@@ -7,7 +7,7 @@
 <div class="container">
   <div class="column">
 
-    <mat-card class="card">
+    <mat-card class="card" *ngIf="success == false">
       <mat-card-header>
         <mat-card-title>New around here?</mat-card-title>
         <mat-card-subtitle>Sign up to use Tasquee!</mat-card-subtitle>
@@ -66,5 +66,11 @@
         </mat-error>
       </form>
     </mat-card>
+
+    <mat-card style="text-align:center;" class="card" *ngIf="success == true">
+      Sign up successful! Please click
+      <a routerLink="/login">here</a> to log in.
+    </mat-card>
+
   </div>
 </div>
